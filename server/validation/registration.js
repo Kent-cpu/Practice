@@ -5,6 +5,7 @@ const ApiError = require("../error/ApiError");
 const checkEmailIsRegistered = (email, errorMessage) => {
     return User.findOne({where: {email}})
         .then(user => {
+            console.log(user)
             if(user) return Promise.reject(errorMessage);
         });
 };
@@ -32,7 +33,7 @@ const registrationValidationRules = [
         .custom(email => checkEmailIsRegistered(email, "Этот e-mail уже зарегистрирован")),
     body('password')
         .exists({checkFalsy: true})
-        .withMessage("Required field")
+        .withMessage("Обязательное поле")
         .bail()
         .isLength({
             min: 6
@@ -49,7 +50,6 @@ const registrationHandler = async (req, res, next) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            console.log(errors.array())
             return next(ApiError.badRequest("Некорректные данные при регистрации", errors.array()));
         }
         next();

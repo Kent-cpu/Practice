@@ -9,8 +9,8 @@ class ApiError extends Error {
         return new ApiError(404, message, errors);
     }
 
-    static internal(message) {
-        return new ApiError(500, message);
+    static internal(message, errors) {
+        return new ApiError(500, message, errors);
     }
 
     static forbidden(message) {
