@@ -21,7 +21,8 @@ class UserController {
     }
 
     async check(req, res) {
-
+        const token = UserService.check(req.user.id, req.user.email, req.user.role)
+        return res.json({token});
     }
 }
 

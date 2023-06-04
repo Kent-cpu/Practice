@@ -39,6 +39,10 @@ class UserService {
         }
         return generateJwt(user.id, user.email, user.role);
     }
+
+    async check(id, email, role) {
+        return generateJwt(id, email, role);
+    }
 }
 
 module.exports = new UserService();
