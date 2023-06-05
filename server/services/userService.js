@@ -1,4 +1,4 @@
-const {Institution, User} = require("../models/models");
+const { User} = require("../models/models");
 const bcrypt = require("bcrypt");
 const jwt= require("jsonwebtoken");
 const ApiError = require("../error/ApiError");
@@ -13,16 +13,11 @@ const generateJwt = (id, email, role) => {
 
 class UserService {
     async registration(body) {
-        const {email, password, name, lastName, patronymic, role, institutionName} = body;
-        const institution = await Institution.findOne({
-            where: {
-                name: institutionName,
-            }
-        });
+        const {email, password, name, lastName, patronymic} = body;
 
         const hashPassword = await bcrypt.hash(password, 5);
         const user = await User.create({
-            email, password: hashPassword, name, last_name: lastName, patronymic, role, institutionId: institution.id
+            email, password: hashPassword, name, last_name: lastName, patronymic, role: "Инспектор"
         });
         const token = generateJwt(user.id, user.email, user.role);
         return token;
@@ -37,11 +32,13 @@ class UserService {
         if (!comparePassword) {
             throw ApiError.internal('Указан неверный пароль', [{path: "emailOrPassword",  msg: "Неверная почта или пароль"}]);
         }
-        return generateJwt(user.id, user.email, user.role);
+        const token = generateJwt(user.id, user.email, user.role);
+        return token;
     }
 
     async check(id, email, role) {
-        return generateJwt(id, email, role);
+        const token = generateJwt(id, email, role);
+        return token;
     }
 }
 

@@ -31,7 +31,7 @@ const registrationValidationRules = [
         .withMessage("Неверная электронная почта")
         .bail()
         .custom(email => checkEmailIsRegistered(email, "Этот e-mail уже зарегистрирован")),
-    body('password')
+    body("password")
         .exists({checkFalsy: true})
         .withMessage("Обязательное поле")
         .bail()
