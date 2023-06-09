@@ -36,8 +36,9 @@ class UserService {
         return token;
     }
 
-    async check(id, email, role) {
-        const token = generateJwt(id, email, role);
+    async check(email) {
+        const user = await User.findOne({where: {email}});
+        const token = generateJwt(user.id, user.email, user.role);
         return token;
     }
 }
