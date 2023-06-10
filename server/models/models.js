@@ -1,50 +1,50 @@
 const sequelize = require("../db");
 const {DataTypes} = require("sequelize");
 
-const User = sequelize.define("user", {
+const User = sequelize.define("Users", {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     email: {type: DataTypes.STRING, unique: true, allowNull: false},
     password: {type: DataTypes.STRING, allowNull: false},
-    role: {type: DataTypes.STRING, defaultValue: "USER"},
     name: {type: DataTypes.STRING, allowNull: false},
-    last_name: {type: DataTypes.STRING, allowNull: false},
+    lastName: {type: DataTypes.STRING, allowNull: false},
     patronymic: {type: DataTypes.STRING, allowNull: false},
 });
 
-
-const Criterion = sequelize.define("criterion", {
+const Check = sequelize.define("Checks", {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    text: {type: DataTypes.STRING, allowNull: false},
+    company: {type: DataTypes.STRING, allowNull: false},
+    status: {type: DataTypes.STRING, allowNull: false},
+    dateTest: {type: DataTypes.DATE, allowNull: false},
 });
 
-const Checklist = sequelize.define("checklist", {
+const Checklist = sequelize.define("Checklists", {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     title: {type: DataTypes.STRING, allowNull: false},
 });
 
-const Answer = sequelize.define("answer", {
+const Criterion = sequelize.define("Criteria", {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    title: {type: DataTypes.STRING, allowNull: false},
+});
+
+const CheckChecklist = sequelize.define("CheckChecklists", {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+});
+
+const Answer = sequelize.define("Answers", {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     status: {type: DataTypes.STRING,  allowNull: false},
     note: {type: DataTypes.STRING, allowNull: true},
 });
 
-const Report = sequelize.define("report", {
+const Report = sequelize.define("Reports", {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    test_date: {type: DataTypes.DATE, allowNull: false},
-    check_type: {type: DataTypes.STRING, defaultValue: "Плановая"},
-});
-
-const Company = sequelize.define("company", {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    name: {type: DataTypes.STRING, allowNull: false, unique: true},
+    dateCompletion: {type: DataTypes.DATE, allowNull: false},
 });
 
 
 User.hasMany(Report);
 Report.belongsTo(User);
-
-Company.hasMany(Report);
-Report.belongsTo(Company);
 
 Report.hasMany(Answer);
 Answer.belongsTo(Report);
@@ -52,8 +52,22 @@ Answer.belongsTo(Report);
 Checklist.hasMany(Criterion);
 Criterion.belongsTo(Checklist);
 
-Criterion.hasOne(Answer);
+Checklist.hasMany(CheckChecklist);
+CheckChecklist.belongsTo(Checklist);
+
+Criterion.hasMany(Answer);
 Answer.belongsTo(Criterion);
+
+User.hasMany(Check);
+Check.belongsTo(User);
+
+Check.hasMany(CheckChecklist);
+CheckChecklist.belongsTo(Check);
+
+Check.hasOne(Report);
+Report.belongsTo(Check);
+
+
 
 module.exports = {
     User,
@@ -61,5 +75,6 @@ module.exports = {
     Checklist,
     Answer,
     Report,
-    Company,
+    Check,
+    CheckChecklist,
 };
