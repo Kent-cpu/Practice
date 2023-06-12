@@ -61,7 +61,7 @@ const AddCheck = () => {
     return (
         <div>
             <Header/>
-            <Container className="mt-5">
+            <Container>
                 <h1 className="mb-4">Добавить проверку</h1>
                 <Form>
                     <FormGroup className="mb-3">

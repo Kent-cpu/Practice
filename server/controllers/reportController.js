@@ -11,7 +11,15 @@ class ReportController {
                 fs.unlinkSync(filename);
             });
         }catch (e) {
-            console.log(e);
+            next(e);
+        }
+    }
+
+    async findWorstChecklists(req, res, next) {
+        try {
+            const worstChecklists = await ReportService.findWorstChecklists();
+            return res.json(worstChecklists);
+        }catch (e) {
             next(e);
         }
     }

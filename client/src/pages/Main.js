@@ -13,13 +13,12 @@ const Main = () => {
         getChecks(user.id).then(findChecks => (setChecks(findChecks)));
     }, []);
 
-    console.log(checks);
 
     return (
         <div>
             <Header/>
             <Container>
-                <h1>Мои проверки</h1>
+                <h1 className="mb-4">Мои проверки</h1>
                 {checks.map((check) => {
                     return <div className="mb-3">
                         <CheckCard

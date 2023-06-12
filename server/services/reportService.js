@@ -1,5 +1,6 @@
-const {Report, Answer, Criterion, Check} = require("../models/models");
+const {Report, Answer, Criterion, Check, Checklist} = require("../models/models");
 const ExcelJS = require('exceljs');
+const {Sequelize} = require("sequelize");
 
 
 class ReportService {
@@ -71,6 +72,31 @@ class ReportService {
         check.status = "Выполнено";
         await check.save();
         return filePath;
+    }
+
+    async findWorstChecklists() {
+        const worstChecklists = await Checklist.findAll({
+            attributes: ['title', 'id', [Sequelize.fn('COUNT', Sequelize.literal('*')), 'incorrect_answers_count']],
+            include: [
+                {
+                    model: Criterion,
+                    attributes: [],
+                    include: [
+                        {
+                            model: Answer,
+                            attributes: []
+                        }
+                    ]
+                }
+            ],
+            where: { '$criteria.answers.status$': 'Нет' },
+            group: ['checklists.id'],
+            order: [[Sequelize.literal('incorrect_answers_count'), 'DESC']],
+            raw: true,
+            nest: true
+        });
+
+        return worstChecklists;
     }
 }
 
