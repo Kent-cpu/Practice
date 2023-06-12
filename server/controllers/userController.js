@@ -20,9 +20,13 @@ class UserController {
         }
     }
 
-    async check(req, res) {
-        const token = await UserService.check(req.user.id, req.user.email);
-        return res.json({token});
+    async check(req, res, next) {
+        try {
+            const token = await UserService.check(req.user.id, req.user.email);
+            return res.json({token});
+        }catch (e) {
+            next(e);
+        }
     }
 }
 

@@ -6,7 +6,7 @@ import {ADD_CHECK_ROUTE, HISTORY_ROUTE, MAIN_ROUTE, STATS_ROUTE} from "../utils/
 
 function Header() {
     return (
-        <Navbar bg="primary" expand="lg">
+        <Navbar className="mb-4" bg="primary" expand="lg">
             <Container className="d-flex justify-content-between">
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
