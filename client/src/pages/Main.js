@@ -10,7 +10,10 @@ const Main = () => {
     const {user} = useContext(AuthContext);
 
     useEffect(() => {
-        getChecks(user.id).then(findChecks => (setChecks(findChecks)));
+        getChecks(user.id)
+            .then(findChecks => (setChecks(findChecks)))
+            .catch(e => console.log(e));
+        ;
     }, []);
 
 

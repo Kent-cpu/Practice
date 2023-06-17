@@ -22,6 +22,8 @@ function App() {
         }).finally(() => setLoading(false));
     }, []);
 
+
+
     return (
         <AuthContext.Provider value={{user, setUser, isAuth, setIsAuth}}>
             <BrowserRouter>

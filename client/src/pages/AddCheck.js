@@ -14,7 +14,10 @@ const AddCheck = () => {
     const {user} = useContext(AuthContext);
 
     useEffect(() => {
-        getChecklists().then(checklists => setCheckLists(checklists));
+        getChecklists()
+            .then(checklists => setCheckLists(checklists))
+            .catch(e => console.log(e));
+        ;
     }, []);
 
     const handleCheckboxChange = (checklistTitle) => {
