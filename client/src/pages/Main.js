@@ -19,18 +19,21 @@ const Main = () => {
             <Header/>
             <Container>
                 <h1 className="mb-4">Мои проверки</h1>
-
-                {checks.map((check) => {
-                    return <div className="mb-3">
-                        <CheckCard
-                            key={check.id}
-                            id={check.id}
-                            dateTest={new Date(check.dateTest).toLocaleDateString("ru-RU")}
-                            company={check.company}
-                            status={check.status}
-                        />
-                    </div>
-                })}
+                {checks.length > 0 ?
+                    checks.map(check => {
+                        return <div className="mb-3">
+                            <CheckCard
+                                key={check.id}
+                                id={check.id}
+                                dateTest={new Date(check.dateTest).toLocaleDateString("ru-RU")}
+                                company={check.company}
+                                status={check.status}
+                            />
+                        </div>
+                    })
+                :
+                    <p>Невыполненных проверок не найдено!</p>
+                }
             </Container>
         </div>
     );

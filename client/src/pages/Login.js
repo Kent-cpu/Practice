@@ -5,7 +5,7 @@ import {NavLink, useNavigate} from "react-router-dom";
 import {AuthContext} from "../contexts";
 import {login} from "../http/userApi";
 import {MAIN_ROUTE, REGISTRATION_ROUTE} from "../utils/urls";
-import Feedback from "react-bootstrap/Feedback";
+
 
 const Login = () => {
     const {setUser, setIsAuth} = useContext(AuthContext);
@@ -39,8 +39,7 @@ const Login = () => {
             setIsLoginRequestSent(false);
         }
     }
-
-    console.log(errors)
+    
 
     return (
         <Container
