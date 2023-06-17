@@ -5,6 +5,7 @@ import {NavLink, useNavigate} from "react-router-dom";
 import {AuthContext} from "../contexts";
 import {login} from "../http/userApi";
 import {MAIN_ROUTE, REGISTRATION_ROUTE} from "../utils/urls";
+import Feedback from "react-bootstrap/Feedback";
 
 const Login = () => {
     const {setUser, setIsAuth} = useContext(AuthContext);
@@ -39,6 +40,8 @@ const Login = () => {
         }
     }
 
+    console.log(errors)
+
     return (
         <Container
             className="d-flex justify-content-center align-items-center"
@@ -71,6 +74,8 @@ const Login = () => {
                     <Form.Control.Feedback type="invalid">
                         {errors.password}
                     </Form.Control.Feedback>
+
+                    {errors.emailOrPassword && <p className="mt-2 mb-0 text-center text-danger">{errors.emailOrPassword}</p>}
 
                     <Button
                         className="mt-5 pt-2 pb-2"
