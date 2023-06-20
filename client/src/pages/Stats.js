@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import Header from "../components/Header";
 import {getStats} from "../http/reportApi";
-import {Container, ListGroup} from "react-bootstrap";
+import {Container} from "react-bootstrap";
 import {
     Chart as ChartJs,
     CategoryScale,
@@ -25,7 +25,7 @@ ChartJs.register(
     ArcElement
 );
 
-// ChartJs.defaults.plugins.legend.display = false;
+
 const Stats = () => {
     const [statistics, setStatistics] = useState([]);
     const [dataForBar, setDataForBar] = useState(null);

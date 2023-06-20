@@ -10,6 +10,14 @@ const checkEmailIsRegistered = (email, errorMessage) => {
         });
 };
 
+const checkEmailDomain = (email) => {
+    const emailRegex = /^[A-Za-z0-9._%+-]+@rostrud\.ru$/;
+    if(!email.match(emailRegex)) {
+        return Promise.reject("Недопустимый домен эл. почты");
+    }
+    return true;
+}
+
 const registrationValidationRules = [
     body("name")
         .exists({checkFalsy: true})
@@ -30,7 +38,8 @@ const registrationValidationRules = [
         .isEmail()
         .withMessage("Неверная электронная почта")
         .bail()
-        .custom(email => checkEmailIsRegistered(email, "Этот e-mail уже зарегистрирован")),
+        .custom(email => checkEmailIsRegistered(email, "Этот e-mail уже зарегистрирован"))
+        .custom(email => checkEmailDomain(email)),
     body("password")
         .exists({checkFalsy: true})
         .withMessage("Обязательное поле")

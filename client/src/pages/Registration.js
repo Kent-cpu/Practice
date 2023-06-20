@@ -8,6 +8,7 @@ import {AuthContext} from "../contexts";
 
 
 const Registration = () => {
+    //@rostrud.ru
     const [userData, setUserData] = useState({
         email: "",
         password: "",
@@ -19,7 +20,7 @@ const Registration = () => {
     const [isRegisterRequestSent, setIsRegisterRequestSent] = useState(false);
     const navigate = useNavigate();
     const {setUser, setIsAuth} = useContext(AuthContext);
-
+    
     const registerUser = async () => {
         try {
             setIsRegisterRequestSent(true);
