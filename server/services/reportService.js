@@ -1,7 +1,7 @@
 const {Report, Answer, Criterion, Check, Checklist} = require("../models/models");
 const ExcelJS = require('exceljs');
-const {Sequelize} = require("sequelize");
-
+const sequelize = require("../db");
+const {QueryTypes} = require("sequelize");
 
 class ReportService {
     async saveReport(userId, checkId, answers) {
@@ -75,28 +75,39 @@ class ReportService {
     }
 
     async findWorstChecklists() {
-        const worstChecklists = await Checklist.findAll({
-            attributes: ['title', 'id', [Sequelize.fn('COUNT', Sequelize.literal('*')), 'incorrect_answers_count']],
-            include: [
-                {
-                    model: Criterion,
-                    attributes: [],
-                    include: [
-                        {
-                            model: Answer,
-                            attributes: []
-                        }
-                    ]
-                }
-            ],
-            where: { '$criteria.answers.status$': 'Нет' },
-            group: ['checklists.id'],
-            order: [[Sequelize.literal('incorrect_answers_count'), 'DESC']],
-            raw: true,
-            nest: true
+        const statisticsChecklists = await sequelize.query(`
+                 SELECT checklists.id, checklists.title, 
+                        COUNT(CASE WHEN answers.status = 'Нет' THEN 1 END) AS "incorrectAnswers",
+                        COUNT(DISTINCT criteria.id) AS "numCriteriaChecklist",
+                        COUNT(DISTINCT reports.id) AS "numChecks"
+                 FROM checklists 
+                 JOIN criteria ON checklists.id = criteria."checklistId" 
+                 JOIN answers ON criteria.id = answers."criterionId"
+                 JOIN reports ON answers."reportId" = reports.id
+                 GROUP BY checklists.id;
+               `, {type: QueryTypes.SELECT});
+
+        const statisticsWithDiscrepancyRate = statisticsChecklists.map(checklistStatistics => {
+            const discrepancyRate = Math.round(checklistStatistics["incorrectAnswers"]
+                    / (checklistStatistics["numCriteriaChecklist"] * checklistStatistics["numChecks"]) * 100);
+            return { ...checklistStatistics, discrepancyRate };
         });
 
-        return worstChecklists;
+        const sumDiscrepancyRate = statisticsWithDiscrepancyRate.reduce((sum, checklistStatistics) =>
+            sum + checklistStatistics.discrepancyRate
+        , 0);
+
+        const results = statisticsWithDiscrepancyRate
+            .map(checklistStatistics => {
+                return {
+                    id: checklistStatistics.id,
+                    title: checklistStatistics.title,
+                    discrepancyRate: checklistStatistics.discrepancyRate,
+                    numDiscrepanciesChecks: Math.round(checklistStatistics.discrepancyRate / sumDiscrepancyRate * 100),
+                };
+            }).sort((a, b) => b.numDiscrepanciesChecks - a.numDiscrepanciesChecks);
+
+        return results;
     }
 }
 

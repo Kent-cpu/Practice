@@ -25,7 +25,7 @@ ChartJs.register(
     ArcElement
 );
 
-
+// ChartJs.defaults.plugins.legend.display = false;
 const Stats = () => {
     const [statistics, setStatistics] = useState([]);
     const [dataForBar, setDataForBar] = useState(null);
@@ -39,19 +39,18 @@ const Stats = () => {
                     labels: stats.map(item => item.id),
                     datasets: [
                         {
-                            label: 'Количество несоответствий',
-                            data: stats.map(item => item["incorrect_answers_count"]),
+
+                            data: stats.map(item => item["discrepancyRate"]),
                             backgroundColor: 'rgba(30,212,212,0.6)',
                         },
                     ],
                 });
 
                 setDataForPie({
-                    labels: stats.map(item => `Чек лист ${item.id}`),
+                    labels: stats.map(item => `Чек-лист: №${item.id}`),
                     datasets: [
                         {
-                            label: 'Количество несоответствий',
-                            data: stats.map(item => item["incorrect_answers_count"]),
+                            data: stats.map(item => item["numDiscrepanciesChecks"]),
                             backgroundColor: [
                                 'rgba(255, 99, 132, 0.2)',
                                 'rgba(54, 162, 235, 0.2)',
@@ -70,9 +69,7 @@ const Stats = () => {
                             ],
                         },
                     ],
-                })
-
-
+                });
             }
         }).catch(e => console.log(e));
     }, []);
@@ -84,7 +81,7 @@ const Stats = () => {
                 beginAtZero: true,
                 title: {
                     display: true,
-                    text: 'Количество несоответствий',
+                    text: '% Несоответствий',
                 },
             },
             x: {
@@ -92,6 +89,11 @@ const Stats = () => {
                     display: true,
                     text: 'Номер проверочного листа',
                 },
+            },
+        },
+        plugins: {
+            legend: {
+                display: false,
             },
         },
     };

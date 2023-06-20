@@ -20,6 +20,7 @@ class ReportController {
             const worstChecklists = await ReportService.findWorstChecklists();
             return res.json(worstChecklists);
         }catch (e) {
+            console.log(e);
             next(e);
         }
     }
